@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050647">
+<title>Something Big Is Coming · Technical Council IIIT Delhi</title>
+<meta name="description" content="Same campus. Different energy. Can you guess? — Technical Council, IIIT Delhi">
+<meta property="og:title" content="Something Big Is Coming">
+<meta property="og:description" content="Same campus. Different energy. Can you guess? — Technical Council, IIIT Delhi">
+<meta property="og:image" content="assets/sky.webp">
+<link rel="icon" href="assets/tc-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/tc-logo.png">
+<link rel="preload" as="image" href="assets/sky.webp">
+<link rel="preload" as="image" href="assets/fg.webp">
+<style>
+:root{
+  --top:#050647;
+  --bottom:#06021b;
+  --purple:#a64dff;
+  --magenta:#e25cff;
+  --pink:#ff7ad9;
+  --lilac:#d9b3ff;
+  --ink:#fbefff;
+  --dim:#a48fd6;
+  --panel:rgba(14,5,38,.82);
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+  --ease:cubic-bezier(.22,.8,.26,1);
+  --ease-io:cubic-bezier(.65,0,.35,1);
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --pixel:'Silkscreen',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bottom);color:var(--ink);overflow:hidden;overscroll-behavior:none;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--mono);display:flex;justify-content:center;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--pink);outline-offset:3px}
+
+#app{
+  position:relative;width:100%;max-width:520px;height:100vh;height:100dvh;overflow:hidden;
+  background:linear-gradient(var(--top),#0a0536 40%,var(--bottom));
+  -webkit-user-select:none;user-select:none;
+}
+@media (min-width:521px){#app{box-shadow:0 0 80px rgba(166,77,255,.22)}}
+
+/* ---------- poster stage: 941×1672 design space ---------- */
+#backdrop{position:absolute;inset:-40px;background:linear-gradient(transparent 50%,var(--bottom) 80%),url(assets/sky.webp) center top/cover;filter:blur(24px) brightness(.7);opacity:0;transition:opacity 1.6s var(--ease-io)}
+#stage{position:absolute;left:0;top:0;width:941px;height:1672px;transform-origin:0 0}
+#stage .L{position:absolute;display:block;pointer-events:none}
+#world{
+  position:absolute;inset:0;opacity:0;filter:brightness(.35) blur(14px);
+  transition:opacity 1.8s var(--ease-io),filter 1.8s var(--ease-io);will-change:filter,opacity;
+}
+#app.narrow #world{-webkit-mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent)}
+#skyWrap{position:absolute;inset:0;overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 70px);mask-image:linear-gradient(to bottom,transparent 0,#000 70px)}
+#sky{position:absolute;inset:0;width:100%;height:100%;animation:drift 24s ease-in-out infinite alternate;will-change:transform}
+@keyframes drift{0%{transform:scale(1.05) translate(-9px,2px)}100%{transform:scale(1.07) translate(9px,-4px)}}
+#stars{position:absolute;left:0;top:0;width:941px;height:900px}
+#fg{left:0;top:830px;width:941px;height:842px}
+#bottomFade{position:absolute;left:0;right:0;bottom:0;height:120px;background:linear-gradient(transparent,var(--bottom))}
+
+/* reveal layers */
+.hl{position:absolute;opacity:0}
+.hl img{position:absolute;inset:0;width:100%;height:100%}
+.hl.in{animation:lineIn 1s var(--ease) forwards}
+@keyframes lineIn{
+  0%{opacity:0;transform:translateY(28px) scale(.97);filter:blur(12px)}
+  60%{filter:blur(0)}
+  100%{opacity:1;transform:none;filter:none}
+}
+#headline.breathe{animation:breathe 5s ease-in-out infinite}
+@keyframes breathe{50%{filter:brightness(1.08)}}
+#deco{opacity:0}
+#deco.in{animation:fadeScale 1.4s var(--ease) forwards}
+@keyframes fadeScale{0%{opacity:0;transform:scale(1.03)}100%{opacity:1;transform:none}}
+.tag{clip-path:inset(0 100% 0 0);opacity:0}
+.tag.in{animation:wipe .9s var(--ease-io) forwards}
+@keyframes wipe{0%{opacity:0;clip-path:inset(0 100% 0 0)}15%{opacity:1}100%{opacity:1;clip-path:inset(0 0 0 0)}}
+
+/* CAN U GUESS? — lives in poster space, styled after the poster's button */
+#guess{position:absolute;left:0;top:1422px;width:941px;display:flex;flex-direction:column;align-items:center;gap:30px;pointer-events:none}
+#guessBtn{
+  position:relative;pointer-events:auto;
+  font:700 54px/1 var(--pixel);letter-spacing:.04em;color:#fff;
+  padding:30px 66px 32px;border:6px solid var(--magenta);border-radius:28px;
+  background:rgba(18,5,44,.84);
+  box-shadow:0 0 26px var(--magenta),0 0 70px rgba(166,77,255,.5),inset 0 0 28px rgba(226,92,255,.4);
+  text-shadow:0 0 14px var(--magenta);
+  opacity:0;transform:translateY(40px);
+  transition:transform .25s var(--ease),box-shadow .3s ease,background .3s ease;
+}
+#guessBtn::before,#guessBtn::after{content:"";position:absolute;top:50%;height:6px;width:64px;background:var(--magenta);box-shadow:0 0 14px var(--magenta);border-radius:2px}
+#guessBtn::before{right:calc(100% + 22px);transform:translateY(-22px)}
+#guessBtn::after{left:calc(100% + 22px);transform:translateY(22px)}
+#guessBtn.in{animation:riseIn .9s var(--ease) forwards}
+#guessBtn.live{opacity:1;transform:none;animation:btnGlow 3.2s ease-in-out infinite}
+#guessBtn.live:active{transform:scale(.97)}
+@keyframes riseIn{to{opacity:1;transform:none}}
+@keyframes btnGlow{50%{box-shadow:0 0 36px var(--pink),0 0 90px rgba(226,92,255,.55),inset 0 0 34px rgba(255,122,217,.5)}}
+#guessBtn.done{border-color:#c79bff;text-shadow:0 0 10px var(--purple)}
+#guessBtn .q{display:inline-block;animation:qBob 2.4s ease-in-out infinite}
+@keyframes qBob{50%{transform:translateY(-6px)}}
+#gift{
+  font:500 28px/1.3 var(--mono);color:#efe2ff;letter-spacing:.01em;text-align:center;
+  text-shadow:0 0 12px rgba(166,77,255,.9),0 2px 6px rgba(0,0,0,.8);
+  display:flex;align-items:center;gap:14px;opacity:0;transform:translateY(12px);transition:opacity 1s ease,transform 1s var(--ease);
+}
+#gift.in{opacity:1;transform:none}
+#gift svg{width:30px;height:30px;flex:none;filter:drop-shadow(0 0 6px var(--magenta))}
+
+/* ---------- overlays ---------- */
+#fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:12}
+.vignette{position:absolute;inset:0;pointer-events:none;z-index:13;background:radial-gradient(140% 95% at 50% 45%,transparent 60%,rgba(4,0,14,.5))}
+#bloom{position:absolute;inset:0;pointer-events:none;z-index:40;background:radial-gradient(circle at 50% 42%,rgba(236,200,255,.55),rgba(166,77,255,.18) 55%,transparent 75%);opacity:0}
+#bloom.on{animation:bloom 1.6s var(--ease-io)}
+@keyframes bloom{0%{opacity:0}30%{opacity:1}100%{opacity:0}}
+
+/* ---------- brand ---------- */
+#splash{
+  position:absolute;z-index:22;left:50%;top:44%;width:min(64vw,270px);
+  transform:translate(-50%,-50%) scale(.94);opacity:0;pointer-events:none;
+  filter:drop-shadow(0 0 18px rgba(199,125,255,.55));
+  transition:opacity .9s var(--ease-io),transform 1s var(--ease);
+}
+#splash.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+#splash.off{opacity:0;transform:translate(-50%,-62%) scale(.8);transition:opacity .7s var(--ease-io),transform .8s var(--ease-io)}
+#brand{
+  position:absolute;z-index:20;left:0;right:0;top:calc(10px + var(--safe-t));
+  display:flex;justify-content:center;align-items:center;gap:11px;
+  opacity:0;transform:translateY(10px);transition:opacity .8s var(--ease-io),transform .9s var(--ease);
+}
+#brand.on{opacity:1;transform:none}
+#brand img{display:block;width:auto;filter:drop-shadow(0 0 8px rgba(199,125,255,.6))}
+#brand .logo{height:128px}
+@media (max-height:760px){#brand .logo{height:104px}}
+@media (max-height:640px){#brand .logo{height:88px}#brand{top:calc(6px + var(--safe-t))}}
+
+/* ---------- console (frames 1–3) ---------- */
+#console{
+  position:absolute;z-index:15;left:0;right:0;top:var(--band,150px);
+  display:flex;flex-direction:column;align-items:center;gap:28px;padding:0 20px;
+  transition:opacity .55s var(--ease-io),transform .6s var(--ease-io);
+}
+#console.out{opacity:0;transform:translateY(-14px) scale(.98);pointer-events:none}
+.term{
+  width:min(100%,400px);opacity:0;transform:translateY(16px);
+  transition:opacity .7s var(--ease-io),transform .8s var(--ease);
+  background:var(--panel);
+  border:1px solid rgba(199,125,255,.55);border-radius:12px;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(166,77,255,.15),0 20px 60px rgba(8,0,30,.6),0 0 30px rgba(166,77,255,.25);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+}
+.term.show{opacity:1;transform:none}
+.term-bar{
+  display:flex;align-items:center;gap:10px;padding:9px 12px;
+  background:linear-gradient(90deg,rgba(107,43,217,.35),rgba(226,92,255,.12));
+  border-bottom:1px solid rgba(199,125,255,.28);
+  font:500 11px/1 var(--mono);letter-spacing:.06em;color:var(--dim)
+}
+.term-bar .dots{display:flex;gap:6px}
+.term-bar .dots i{width:9px;height:9px;border-radius:50%;background:rgba(226,92,255,.9)}
+.term-bar .dots i:nth-child(2){background:rgba(166,77,255,.8)}
+.term-bar .dots i:nth-child(3){background:rgba(120,90,200,.55)}
+.term-bar .t{flex:1;transition:opacity .4s}
+.term-body{position:relative;height:236px;padding:16px 16px 0;font:400 14.5px/1.65 var(--mono);color:var(--ink)}
+.phase{position:absolute;inset:16px 16px 0;transition:opacity .45s var(--ease-io),transform .5s var(--ease)}
+.phase.gone{opacity:0;transform:translateY(-6px)}
+.phase.enter{opacity:0;transform:translateY(8px)}
+.ln{white-space:pre-wrap;word-break:break-word;animation:lnIn .4s var(--ease) both}
+@keyframes lnIn{from{opacity:0;transform:translateY(3px)}}
+.pr{color:var(--magenta);margin-right:.5em}
+.k{color:var(--dim)}
+.ok{color:var(--pink)}
+.caret{display:inline-block;width:.55em;height:1.05em;vertical-align:-3px;background:var(--lilac);margin-left:2px;border-radius:1px;animation:caret 1.1s ease-in-out infinite}
+@keyframes caret{0%,100%{opacity:1}50%{opacity:.1}}
+.bar{position:absolute;left:0;right:0;bottom:18px;display:flex;align-items:center;gap:12px}
+.track{flex:1;height:6px;border-radius:6px;background:rgba(166,77,255,.18);overflow:hidden}
+.fill{height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--purple),var(--magenta),var(--pink));box-shadow:0 0 12px var(--magenta)}
+.pct{font:500 13px/1 var(--mono);min-width:3.2em;text-align:right;color:var(--lilac);font-variant-numeric:tabular-nums}
+.title{font:700 21px/1.2 var(--pixel);letter-spacing:.03em;color:#fff;text-shadow:0 0 14px rgba(226,92,255,.8);margin-bottom:12px;animation:titleIn 1s var(--ease) both}
+@keyframes titleIn{from{opacity:0;letter-spacing:.2em;filter:blur(4px)}}
+.status-dot{display:inline-block;width:8px;height:8px;margin-left:8px;border-radius:50%;background:var(--pink);box-shadow:0 0 8px var(--pink);animation:caret 1.8s ease-in-out infinite;vertical-align:1px}
+.granted-val{color:#fff;background:linear-gradient(90deg,var(--purple),var(--magenta));padding:1px 7px;border-radius:4px;box-shadow:0 0 14px rgba(226,92,255,.6);animation:lnIn .5s var(--ease) both}
+.granted{display:flex;align-items:center;gap:10px;margin-top:14px;white-space:nowrap;font:700 18px/1 var(--pixel);color:#fff;text-shadow:0 0 12px var(--magenta);animation:lnIn .7s var(--ease) both}
+.granted svg{width:18px;height:18px;flex:none;filter:drop-shadow(0 0 6px var(--pink))}
+.welcome{margin-top:8px;color:var(--lilac)}
+
+.enter{
+  font:700 24px/1 var(--pixel);letter-spacing:.06em;color:#fff;
+  padding:17px 38px;border:2px solid var(--magenta);border-radius:14px;
+  background:rgba(18,5,44,.7);
+  box-shadow:0 0 18px rgba(226,92,255,.55),inset 0 0 16px rgba(226,92,255,.3);
+  text-shadow:0 0 10px var(--magenta);
+  display:inline-flex;align-items:center;gap:14px;
+  opacity:0;transform:translateY(14px);pointer-events:none;
+  transition:opacity .6s var(--ease-io),transform .7s var(--ease),box-shadow .3s,background .3s;
+}
+.enter.show{opacity:1;transform:none;pointer-events:auto;animation:enterGlow 2.6s ease-in-out 1s infinite}
+.enter:active{transform:scale(.97)}
+.enter .arr{display:inline-block;animation:nudge 1.6s ease-in-out infinite}
+@keyframes nudge{50%{transform:translateX(5px)}}
+@keyframes enterGlow{50%{box-shadow:0 0 30px rgba(255,122,217,.75),0 0 60px rgba(166,77,255,.4),inset 0 0 20px rgba(255,122,217,.4)}}
+
+#skip{
+  position:absolute;z-index:21;right:10px;bottom:calc(12px + var(--safe-b));
+  font:500 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+  padding:10px 12px;opacity:0;transition:opacity 1s ease;pointer-events:none
+}
+#skip.show{opacity:.7;pointer-events:auto}
+
+/* ---------- guess sheet ---------- */
+#sheet{position:absolute;inset:0;z-index:60;pointer-events:none}
+#sheet .scrim{position:absolute;inset:0;background:rgba(4,0,16,.6);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);opacity:0;transition:opacity .45s ease}
+#sheet .panel{
+  position:absolute;left:0;right:0;bottom:0;
+  padding:12px 22px calc(24px + var(--safe-b));
+  background:linear-gradient(180deg,rgba(30,10,72,.97),rgba(12,4,34,.98));
+  border-top:1px solid rgba(226,92,255,.55);border-radius:22px 22px 0 0;
+  box-shadow:0 -10px 50px rgba(166,77,255,.35);
+  transform:translateY(105%);transition:transform .55s var(--ease),bottom .25s ease;
+  -webkit-user-select:text;user-select:text;
+}
+#sheet.open{pointer-events:auto}
+#sheet.open .scrim{opacity:1}
+#sheet.open .panel{transform:none}
+.grab{width:40px;height:4px;border-radius:4px;background:rgba(217,179,255,.35);margin:0 auto 16px}
+.sheet-close{position:absolute;right:10px;top:10px;width:40px;height:40px;border-radius:50%;color:var(--dim);font-size:22px;line-height:40px}
+.sheet-title{font:700 24px/1.1 var(--pixel);letter-spacing:.03em;text-shadow:0 0 14px var(--magenta)}
+.sheet-sub{margin:8px 0 20px;font:400 14px/1.5 var(--mono);color:var(--lilac)}
+.field{display:block;margin-bottom:14px}
+.field span{display:block;font:500 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+.field input{
+  width:100%;font:400 16px/1.2 var(--mono);color:#fff;
+  background:rgba(8,2,26,.7);border:1px solid rgba(199,125,255,.4);border-radius:12px;padding:14px 14px;
+  transition:border-color .25s,box-shadow .25s;-webkit-appearance:none;appearance:none
+}
+.field input::placeholder{color:rgba(217,179,255,.35)}
+.field input:focus{outline:none;border-color:var(--magenta);box-shadow:0 0 0 3px rgba(226,92,255,.25)}
+.submit{
+  width:100%;margin-top:6px;font:700 18px/1 var(--pixel);letter-spacing:.06em;color:#fff;
+  padding:17px;border-radius:14px;background:linear-gradient(90deg,#7b2ff0,var(--magenta));
+  box-shadow:0 8px 30px rgba(226,92,255,.35);transition:opacity .2s,transform .15s
+}
+.submit:active{transform:scale(.98)}
+.submit[disabled]{opacity:.55;cursor:default}
+.err{min-height:1.4em;margin-top:10px;font:400 13px/1.4 var(--mono);color:#ff9ab8;text-align:center}
+.done-view{display:none;text-align:center;padding:10px 0 6px}
+.done-view .big{font:700 22px/1.2 var(--pixel);text-shadow:0 0 14px var(--magenta);margin:6px 0 10px}
+.done-view p{font:400 14px/1.55 var(--mono);color:var(--lilac)}
+.done-view .yours{margin-top:14px;padding:12px;border:1px dashed rgba(199,125,255,.45);border-radius:12px;color:#fff;word-break:break-word}
+#sheet.done .form-view{display:none}
+#sheet.done .done-view{display:block}
+
+@media (max-height:700px){
+  #console{gap:20px}
+  .term-body{height:220px;font-size:13.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.2s!important}
+}
+</style>
+</head>
+<body>
+<div id="app" data-stage="boot">
+  <div id="backdrop"></div>
+  <div id="stage">
+    <div id="world">
+      <div id="skyWrap"><img id="sky" src="assets/sky.webp" alt=""></div>
+      <canvas id="stars"></canvas>
+      <img class="L" id="fg" src="assets/fg.webp" alt="IIIT Delhi campus at dusk">
+      <div id="bottomFade"></div>
+    </div>
+    <img class="L" id="deco" src="assets/l-deco.webp" alt="">
+    <div id="headline" role="heading" aria-level="1" aria-label="Something big is coming">
+      <div class="hl" data-l="h1"></div>
+      <div class="hl" data-l="h2"></div>
+      <div class="hl" data-l="h3"></div>
+    </div>
+    <img class="L tag" id="tag1" src="assets/l-tag1.webp" alt="Same campus.">
+    <img class="L tag" id="tag2" src="assets/l-tag2.webp" alt="Different energy.">
+    <div id="guess">
+      <button id="guessBtn" aria-haspopup="dialog">CAN U GUESS<span class="q">?</span></button>
+      <p id="gift">
+        <svg viewBox="0 0 9 9" shape-rendering="crispEdges" aria-hidden="true"><g fill="#ff9ad2">
+          <rect x="0" y="3" width="9" height="2"/><rect x="1" y="5" width="7" height="4"/>
+          <rect x="2" y="1" width="2" height="2"/><rect x="5" y="1" width="2" height="2"/></g>
+          <g fill="#7b2ff0"><rect x="4" y="3" width="1" height="6"/></g></svg>
+        <span>Closest &amp; fastest guess wins a gift</span>
+      </p>
+    </div>
+  </div>
+
+  <canvas id="fx"></canvas>
+  <div class="vignette"></div>
+
+  <img id="splash" src="assets/tc-logo.png" alt="Technical Council, IIIT Delhi">
+  <header id="brand" aria-hidden="true">
+    <img class="logo" src="assets/tc-logo.png" alt="">
+  </header>
+
+  <div id="console">
+    <section class="term" id="term" aria-live="polite">
+      <div class="term-bar"><span class="dots"><i></i><i></i><i></i></span><span class="t" id="termTitle">tc://iiitd/boot</span></div>
+      <div class="term-body" id="termBody"></div>
+    </section>
+    <button class="enter" id="enterBtn">ENTER <span class="arr">→</span></button>
+  </div>
+  <button id="skip">Skip intro</button>
+
+  <div id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" aria-hidden="true">
+    <div class="scrim" data-close></div>
+    <div class="panel">
+      <div class="grab"></div>
+      <button class="sheet-close" data-close aria-label="Close">×</button>
+      <form class="form-view" id="guessForm" novalidate>
+        <h2 class="sheet-title" id="sheetTitle">CAN U GUESS?</h2>
+        <p class="sheet-sub">Closest &amp; fastest guess wins a gift.</p>
+        <label class="field"><span>Name</span>
+          <input id="fName" name="name" autocomplete="name" maxlength="40" placeholder="Your name" required></label>
+        <label class="field"><span>Your guess</span>
+          <input id="fGuess" name="guess" autocomplete="off" maxlength="120" placeholder="What's coming?" required enterkeyhint="send"></label>
+        <button class="submit" id="submitBtn" type="submit">SUBMIT</button>
+        <p class="err" id="err" role="alert"></p>
+      </form>
+      <div class="done-view">
+        <div class="big">LOCKED IN ✓</div>
+        <p id="doneMsg">Your guess is in. Winners will be announced at the reveal.</p>
+        <p class="yours" id="doneGuess"></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="bloom"></div>
+</div>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const app = $('#app');
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const rand = (a, b) => a + Math.random() * (b - a);
+const pick = a => a[(Math.random() * a.length) | 0];
+const PACE = 1.45; // overall tempo; raise to speed everything up
+let speed = 1, skipping = false;
+const sleep = ms => new Promise(r => setTimeout(r, ms / (speed * PACE)));
+const wait = ms => new Promise(r => setTimeout(r, ms / (PACE * (skipping ? 8 : 1))));
+const store = {
+  get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+
+/* layer rects in poster pixels [x, y, w, h]; the poster is 941×1672 */
+const PW = 941;
+const RECT = {
+  h1: [72, 111, 807, 274], h2: [158, 244, 584, 262], h3: [75, 381, 743, 282],
+  deco: [0, 63, 923, 583], tag1: [327, 653, 369, 63], tag2: [273, 702, 396, 62]
+};
+const place = (el, [x, y, w, h]) => Object.assign(el.style, { left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px' });
+place($('#deco'), RECT.deco); place($('#tag1'), RECT.tag1); place($('#tag2'), RECT.tag2);
+document.querySelectorAll('.hl').forEach(d => {
+  place(d, RECT[d.dataset.l]);
+  d.innerHTML = `<img src="assets/l-${d.dataset.l}.webp" alt="">`;
+});
+
+/* =========================== layout =========================== */
+const stage = $('#stage');
+const starsCv = $('#stars'), stx = starsCv.getContext('2d');
+const fx = $('#fx'), fctx = fx.getContext('2d');
+let W = 0, H = 0, S = 1, OY = 0, DPR = 1;
+let stars = [], streaks = [], motes = [], fxLevel = .25;
+
+function layout() {
+  // the on-screen keyboard only changes the height; don't rescale the poster for it
+  const a = document.activeElement;
+  const r = app.getBoundingClientRect();
+  if (a && a.tagName === 'INPUT' && r.width === W) return;
+  W = r.width; H = r.height; DPR = Math.min(2, window.devicePixelRatio || 1);
+  // poster content (brackets → gift line) spans y 95..1640; keep it under the logo band
+  const brand = $('#brand');
+  const band = brand.offsetTop + brand.offsetHeight + 10;
+  app.style.setProperty('--band', band + 'px');
+  const C0 = 95, C1 = 1640;
+  const avail = H - band - 14;
+  S = Math.min(W / PW, avail / (C1 - C0));
+  const OX = (W - PW * S) / 2;
+  OY = band + (avail - (C1 - C0) * S) / 2 - C0 * S;
+  stage.style.transform = `translate(${OX}px,${OY}px) scale(${S})`;
+  app.classList.toggle('narrow', OX > 1);
+  const k = S * DPR;
+  starsCv.width = Math.round(PW * k); starsCv.height = Math.round(900 * k);
+  fx.width = W * DPR; fx.height = H * DPR;
+  if (!stars.length) stars = Array.from({ length: 90 }, () => ({
+    x: rand(0, PW), y: rand(0, 820), r: rand(.8, 2.3), p: rand(0, 6.28), v: rand(.4, 1.4),
+    c: pick(['255,255,255', '243,220,255', '217,179,255', '255,194,234'])
+  }));
+}
+
+/* =========================== ambient loop =========================== */
+const FX_COLS = ['226,92,255', '166,77,255', '255,122,217', '199,125,255'];
+function spawnStreak() {
+  const dir = Math.random() < .5 ? 1 : -1;
+  streaks.push({ x: dir > 0 ? -80 : W + 80, y: rand(OY + 100 * S, OY + 800 * S), w: rand(24, 70), h: pick([2, 3]), v: dir * rand(50, 130), c: pick(FX_COLS) });
+}
+function spawnMote(y) {
+  motes.push({ x: rand(0, W), y: y ?? rand(H * .4, H), s: rand(1.5, 4), v: rand(6, 18), p: rand(0, 6.28), c: pick(FX_COLS) });
+}
+let last = performance.now();
+function frame(now) {
+  const dt = Math.min(.05, (now - last) / 1000); last = now;
+  const t = now / 1000;
+  const k = S * DPR;
+  stx.setTransform(k, 0, 0, k, 0, 0);
+  stx.clearRect(0, 0, PW, 900);
+  for (const s of stars) {
+    stx.fillStyle = `rgba(${s.c},${.25 + .75 * Math.pow(Math.abs(Math.sin(t * s.v + s.p)), 3)})`;
+    stx.beginPath(); stx.arc(s.x, s.y, s.r, 0, 6.283); stx.fill();
+  }
+  fctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  fctx.clearRect(0, 0, W, H);
+  if (!RM) {
+    if (Math.random() < dt * .9 * fxLevel) spawnStreak();
+    if (motes.length < 20 * fxLevel) spawnMote(H + 10);
+  }
+  streaks = streaks.filter(s => {
+    s.x += s.v * dt;
+    const dir = Math.sign(s.v);
+    const g = fctx.createLinearGradient(s.x - dir * s.w, 0, s.x, 0);
+    g.addColorStop(0, `rgba(${s.c},0)`); g.addColorStop(1, `rgba(${s.c},.75)`);
+    fctx.fillStyle = g;
+    fctx.fillRect(Math.min(s.x, s.x - dir * s.w), s.y, s.w, s.h);
+    return s.x > -200 && s.x < W + 200;
+  });
+  motes = motes.filter(m => {
+    m.y -= m.v * dt; m.x += Math.sin(t + m.p) * .12;
+    fctx.fillStyle = `rgba(${m.c},${.15 + .45 * Math.abs(Math.sin(t * 1.2 + m.p))})`;
+    fctx.fillRect(m.x, m.y, m.s, m.s);
+    return m.y > H * .3;
+  });
+  requestAnimationFrame(frame);
+}
+
+/* =========================== terminal helpers =========================== */
+const body = $('#termBody');
+let phase;
+async function newPhase(title) {
+  const old = phase;
+  if (old) { old.classList.add('gone'); await sleep(420); old.remove(); }
+  $('#termTitle').textContent = title;
+  phase = document.createElement('div'); phase.className = 'phase enter';
+  body.appendChild(phase);
+  requestAnimationFrame(() => requestAnimationFrame(() => phase.classList.remove('enter')));
+  return phase;
+}
+function addLine(html = '') {
+  const d = document.createElement('div'); d.className = 'ln'; d.innerHTML = html;
+  phase.appendChild(d); return d;
+}
+async function type(el, text, cps = 55) {
+  const caret = document.createElement('span'); caret.className = 'caret';
+  el.after(caret);
+  for (const ch of text) { el.textContent += ch; await sleep(1000 / cps); }
+  return caret;
+}
+async function cmd(text, suffix) {
+  const d = addLine('<span class="pr">&gt;</span><span class="tx"></span>');
+  const caret = await type(d.querySelector('.tx'), text);
+  if (suffix) { await sleep(160); caret.insertAdjacentHTML('beforebegin', ' ' + suffix); }
+  caret.remove(); return d;
+}
+async function kv(k, v) {
+  const d = addLine(`<span class="pr">&gt;</span><span class="k">${k}:</span> <span class="tx"></span>`);
+  const caret = await type(d.querySelector('.tx'), v);
+  caret.remove(); return d;
+}
+let pct = 0, fillEl, pctEl;
+function progressTo(to, dur = 500) {
+  const from = pct, t0 = performance.now();
+  return new Promise(res => {
+    const step = now => {
+      const t = Math.min(1, (now - t0) / (dur / (speed * PACE)));
+      pct = from + (to - from) * (1 - Math.pow(1 - t, 3));
+      fillEl.style.width = pct + '%'; pctEl.textContent = Math.round(pct) + '%';
+      t < 1 ? requestAnimationFrame(step) : res();
+    };
+    requestAnimationFrame(step);
+  });
+}
+const checkSvg = `<svg viewBox="0 0 9 9" shape-rendering="crispEdges"><g fill="#ff9ad2">
+<rect x="7" y="1" width="2" height="2"/><rect x="6" y="2" width="2" height="2"/><rect x="5" y="3" width="2" height="2"/>
+<rect x="4" y="4" width="2" height="2"/><rect x="3" y="5" width="2" height="2"/><rect x="2" y="4" width="2" height="2"/>
+<rect x="1" y="3" width="2" height="2"/><rect x="0" y="2" width="2" height="2"/></g></svg>`;
+
+const world = $('#world');
+function setWorld(opacity, filter) {
+  world.style.opacity = opacity; world.style.filter = filter;
+  $('#backdrop').style.opacity = opacity;
+}
+
+/* =========================== stages =========================== */
+async function intro() {
+  // the full Technical Council logo on its own, then it settles into the header
+  const sp = $('#splash');
+  await wait(150);
+  sp.classList.add('on');
+  await wait(1700);
+  sp.classList.add('off');
+  $('#brand').classList.add('on');
+  await wait(500);
+}
+
+async function boot() {
+  app.dataset.stage = 'boot';
+  setWorld(.22, 'brightness(.3) blur(14px)');
+  $('#term').classList.add('show');
+  $('#skip').classList.add('show');
+  await newPhase('tc://iiitd/boot');
+  const bar = document.createElement('div'); bar.className = 'bar';
+  bar.innerHTML = '<div class="track"><div class="fill"></div></div><span class="pct">0%</span>';
+  phase.appendChild(bar);
+  fillEl = bar.querySelector('.fill'); pctEl = bar.querySelector('.pct');
+  await sleep(500);
+  await cmd('BOOTING SYSTEM...');
+  progressTo(16, 500);
+  await cmd('loading modules...', '<span class="ok">[OK]</span>');
+  progressTo(36, 500);
+  await cmd('checking connection...', '<span class="ok">[OK]</span>');
+  progressTo(55, 500);
+  await cmd('verifying user...', '<span class="ok">[OK]</span>');
+  await progressTo(73, 600);
+  await cmd('initialising experience...');
+  await sleep(650);             // the suspicious 73% pause
+  await progressTo(100, 900);
+  await sleep(450);
+}
+
+async function detect() {
+  app.dataset.stage = 'detect';
+  setWorld(.55, 'brightness(.5) blur(6px)');   // campus slowly surfaces behind the console
+  fxLevel = .45;
+  await newPhase('tc://iiitd/scan');
+  const t = addLine('USER DETECTED'); t.className = 'title';
+  await sleep(700);
+  await kv('user', 'you');
+  await sleep(200);
+  await kv('location', 'IIIT Delhi');
+  await sleep(200);
+  const st = await kv('status', 'online');
+  st.insertAdjacentHTML('beforeend', '<span class="status-dot"></span>');
+  await sleep(200);
+  const acc = addLine('<span class="pr">&gt;</span><span class="k">access:</span> <span class="tx"></span>');
+  const tx = acc.querySelector('.tx');
+  for (let i = 0; i < 6; i++) { tx.textContent = '.'.repeat(i % 3 + 1); await sleep(320); }
+  return tx;
+}
+
+async function grant(tx) {
+  tx.innerHTML = '<span class="granted-val">GRANTED</span>';
+  setWorld(.65, 'brightness(.55) blur(4px)');
+  await sleep(600);
+  $('#termTitle').textContent = 'tc://iiitd/welcome';
+  const g = addLine(''); g.className = 'granted';
+  g.innerHTML = 'ACCESS GRANTED ' + checkSvg;
+  await sleep(500);
+  const w = addLine('<span class="tx"></span>'); w.classList.add('welcome');
+  const caret = await type(w.querySelector('.tx'), "Welcome to what's next.", 32);
+  if (skipping) { caret.remove(); return; }
+  speed = 1;
+  const btn = $('#enterBtn');
+  btn.classList.add('show');
+  $('#skip').classList.remove('show');
+  setTimeout(() => caret.remove(), 1400);
+  await new Promise(res => {
+    const go = () => { cleanup(); res(); };
+    const key = e => { if (e.key === 'Enter') go(); };
+    const cleanup = () => { btn.removeEventListener('click', go); removeEventListener('keydown', key); };
+    btn.addEventListener('click', go);
+    addEventListener('keydown', key);
+  });
+}
+
+async function reveal() {
+  skipping = false;
+  if (navigator.vibrate) navigator.vibrate(20);
+  $('#skip').classList.remove('show');
+  $('#console').classList.add('out');
+  $('#bloom').classList.add('on');
+  await wait(500);
+  $('#console').style.display = 'none';
+  app.dataset.stage = 'reveal';
+  setWorld(1, 'none');
+  fxLevel = 1;
+
+  await wait(700);
+  $('#deco').classList.add('in');
+  for (const l of document.querySelectorAll('.hl')) { l.classList.add('in'); await wait(380); }
+  await wait(700);
+  $('#headline').classList.add('breathe');
+  $('#tag1').classList.add('in');
+  await wait(800);
+  $('#tag2').classList.add('in');
+  await wait(1200);
+  const gb = $('#guessBtn');
+  gb.classList.add('in');
+  await wait(500);
+  $('#gift').classList.add('in');
+  await wait(800);
+  gb.classList.replace('in', 'live');
+}
+
+/* =========================== guess sheet =========================== */
+const sheet = $('#sheet'), form = $('#guessForm'), err = $('#err'), submitBtn = $('#submitBtn');
+const panel = sheet.querySelector('.panel');
+function showDone(g) {
+  sheet.classList.add('done');
+  $('#doneMsg').textContent = `Thanks, ${g.name}. Winners will be announced at the reveal.`;
+  $('#doneGuess').textContent = `“${g.guess}”`;
+  const gb = $('#guessBtn');
+  gb.classList.add('done');
+  gb.textContent = 'GUESS LOCKED ✓';
+}
+function openSheet() {
+  sheet.classList.add('open'); sheet.setAttribute('aria-hidden', 'false');
+  if (!sheet.classList.contains('done')) setTimeout(() => $('#fName').focus(), 450);
+}
+function closeSheet() {
+  if (document.activeElement) document.activeElement.blur();
+  sheet.classList.remove('open'); sheet.setAttribute('aria-hidden', 'true');
+}
+$('#guessBtn').addEventListener('click', openSheet);
+sheet.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', closeSheet));
+addEventListener('keydown', e => { if (e.key === 'Escape' && sheet.classList.contains('open')) closeSheet(); });
+$('#fName').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('#fGuess').focus(); } });
+
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  const name = $('#fName').value.trim(), guess = $('#fGuess').value.trim();
+  if (!name) { err.textContent = 'Add your name.'; $('#fName').focus(); return; }
+  if (!guess) { err.textContent = 'Add your guess.'; $('#fGuess').focus(); return; }
+  err.textContent = ''; submitBtn.disabled = true; submitBtn.textContent = 'SENDING...';
+  try {
+    const res = await fetch('/api/guess', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, guess }) });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Could not send your guess. Try again.');
+    const g = { name, guess, at: data.at };
+    store.set('tc-guess', g);
+    if (document.activeElement) document.activeElement.blur();
+    showDone(g);
+  } catch (x) {
+    err.textContent = x instanceof TypeError ? 'No connection. Check your internet and try again.' : x.message;
+  } finally {
+    submitBtn.disabled = false; submitBtn.textContent = 'SUBMIT';
+  }
+});
+
+// keep the sheet above the on-screen keyboard
+if (window.visualViewport) {
+  const vv = window.visualViewport;
+  const onVV = () => { panel.style.bottom = Math.max(0, window.innerHeight - vv.height - vv.offsetTop) + 'px'; };
+  vv.addEventListener('resize', onVV); vv.addEventListener('scroll', onVV);
+}
+
+const prev = store.get('tc-guess');
+if (prev) showDone(prev);
+
+/* skip + tap-to-speed-up */
+$('#skip').addEventListener('click', () => { skipping = true; speed = 12; });
+app.addEventListener('pointerdown', e => {
+  if ((app.dataset.stage === 'boot' || app.dataset.stage === 'detect') && e.target.id !== 'skip') speed = Math.max(speed, 2.2);
+});
+
+/* =========================== start =========================== */
+addEventListener('resize', layout);
+async function start() {
+  const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
+  await Promise.race([fonts, new Promise(r => setTimeout(r, 1500))]);
+  layout();
+  requestAnimationFrame(frame);
+  await intro();
+  await boot();
+  const tx = await detect();
+  await grant(tx);
+  await reveal();
+}
+start();
+})();
+</script>
+</body>
+</html>
