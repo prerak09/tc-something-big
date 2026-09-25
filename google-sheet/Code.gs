@@ -31,9 +31,23 @@ function doPost(e) {
   }
 }
 
-// Visiting the web-app URL in a browser shows this — handy to check the deployment works.
+// Visiting the web-app URL in a browser shows this — handy to check the deployment works
+// and to find the sheet. The link only opens for people the sheet is shared with.
 function doGet() {
-  return json({ ok: true, message: 'Guess endpoint is live.' });
+  const sheet = getSheet();
+  const ss = sheet.getParent();
+  return json({
+    ok: true,
+    message: 'Guess endpoint is live.',
+    sheetUrl: ss.getUrl() + '#gid=' + sheet.getSheetId(),
+    guesses: Math.max(0, sheet.getLastRow() - 1),
+  });
+}
+
+// Run this from the Apps Script editor to print the sheet link in the execution log.
+function logSheetLink() {
+  const sheet = getSheet();
+  Logger.log(sheet.getParent().getUrl() + '#gid=' + sheet.getSheetId());
 }
 
 function getSheet() {
