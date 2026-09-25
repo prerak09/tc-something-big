@@ -345,6 +345,8 @@ const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const rand = (a, b) => a + Math.random() * (b - a);
 const pick = a => a[(Math.random() * a.length) | 0];
 const PACE = 1.45; // overall tempo; raise to speed everything up
+// Google Apps Script web-app URL (see google-sheet/README.md). Empty = use /api/guess from server.py.
+const SHEET_URL = '';
 let speed = 1, skipping = false;
 const sleep = ms => new Promise(r => setTimeout(r, ms / (speed * PACE)));
 const wait = ms => new Promise(r => setTimeout(r, ms / (PACE * (skipping ? 8 : 1))));
@@ -642,9 +644,12 @@ form.addEventListener('submit', async e => {
   if (!guess) { err.textContent = 'Add your guess.'; $('#fGuess').focus(); return; }
   err.textContent = ''; submitBtn.disabled = true; submitBtn.textContent = 'SENDING...';
   try {
-    const res = await fetch('/api/guess', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, guess }) });
+    // text/plain keeps it a "simple" request, so Apps Script needs no CORS preflight
+    const res = SHEET_URL
+      ? await fetch(SHEET_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ name, guess }) })
+      : await fetch('/api/guess', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, guess }) });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || 'Could not send your guess. Try again.');
+    if (!res.ok || data.ok === false) throw new Error(data.error || 'Could not send your guess. Try again.');
     const g = { name, guess, at: data.at };
     store.set('tc-guess', g);
     if (document.activeElement) document.activeElement.blur();
